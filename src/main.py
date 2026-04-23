@@ -38,3 +38,36 @@ async def get_item(item_id: int):
     '''Route handler for calling the searching functionality'''
     item, idx = find_item(inventory, lambda x: x['id'] == item_id)
     return {'item': item}
+
+@fastapi.delete('/items/{item_id}')
+async def delete_item(item_id: int):
+    '''Route handler for the delete functionality'''
+    item, idx = find_item(inventory, lambda x: x['id'] == item_id)
+    if idx == -1:
+        return HTTPException(404, 'item not found')
+    inventory.pop(idx)
+    return {'item': item}
+
+@fastapi.post('/items')
+async def add_item(data: Item):
+    '''Route handler for add a new item in the database'''
+    item = {
+        'id': len(inventory) + 1,
+        'name': data.name,
+        'quantity': data.quantity
+    }
+    inventory.append(item)
+    return item
+
+@fastapi.patch('/items/{item_id}')
+async def update_item(item_id: int, item_update: ItemUpdate):
+    '''Router Handler for updating the already saved item'''
+    item, idx = find_item(inventory, lambda x: x['id'] == item_id)
+    if idx == -1:
+        raise HTTPException(status_code=404, detail='item not found')
+    if item_update.name is not None:
+        item['name'] = item_update.name
+    if item_update.quantity is not None:
+        item['quantity'] = item_update.quantity
+    inventory[idx] = item
+    return item
