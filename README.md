@@ -6,3 +6,10 @@ This API will have the following endpoints:
 - `POST /items` - to get add a new item to our server
 - `PATCH /items/{item_id}` - to update the item on the server
 - `DELETE /items/{item_id}` - to delete an item from the inventory
+
+## Project requirements and Packages
+- All the packages and their versions are well document in [requirements.txt](./requirements.txt)
+- the user who cloned the repo can simply get the latest package version by:
+    ```bash
+    pip install -r requirements.txt
+    ```
