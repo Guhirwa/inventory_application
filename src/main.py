@@ -1,6 +1,7 @@
 '''Entry point of the system'''
 from typing import Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from utils import find_item
 
@@ -22,6 +23,13 @@ class ItemUpdate(BaseModel):
 
     name: Optional[str] = Field(None, description="Optional name for an Item")
     quantity: Optional[int] = Field(None, description="Optional quantity of an Item")
+    
+@fastapi.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={'message': 'An expected error occurred. Please try again.'}
+    )
 
 @fastapi.get('/{username}')
 async def home(username: str):
@@ -36,6 +44,11 @@ async def get_items():
 @fastapi.get('/items/{item_id}')
 async def get_item(item_id: int):
     '''Route handler for calling the searching functionality'''
+    if item_id <= 0:
+        raise HTTPException(
+            status_code=404,
+            detail='Invalid ID. ID must be greater that 0'
+        )
     item, idx = find_item(inventory, lambda x: x['id'] == item_id)
     return {'item': item}
 
