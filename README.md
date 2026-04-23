@@ -1,1 +1,2 @@
 # Inventory Application
+To demonstrate the power of FastAPI, I built a REST API for a hypothetical inventory application. This API will be connected to a database, support image uploads, and have protected routes. 
