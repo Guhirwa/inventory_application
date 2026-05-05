@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from .utils import find_item
+from utils import find_item
 
 fastapi = FastAPI()
 
@@ -24,10 +24,11 @@ class ItemUpdate(BaseModel):
     quantity: Optional[int] = Field(None, description="Optional quantity of an Item")
     
 @fastapi.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
+async  def global_exception_handler(request: Request, exc: Exception):
+    """global exception handler"""
     return JSONResponse(
         status_code=500,
-        content={'message': 'An expected error occurred. Please try again.'}
+        content={"message": "An unexpected error occured. Please try again."}
     )
 
 @fastapi.get('/{username}')
