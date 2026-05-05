@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from utils import find_item
+from .utils import find_item
 
 fastapi = FastAPI()
 
@@ -28,10 +28,10 @@ async  def global_exception_handler(request: Request, exc: Exception):
     """global exception handler"""
     return JSONResponse(
         status_code=500,
-        content={"message": "An unexpected error occured. Please try again."}
+        content={"message": "An unexpected error occurred. Please try again."}
     )
 
-@fastapi.get('/{username}')
+@fastapi.get('/home/{username}')
 async def home(username: str):
     """Home route handler to welcome the user wih a greet message"""
     return {'message': f'Hello {username}, Welcome !!!'}
