@@ -1,9 +1,9 @@
-'''Entry point of the system'''
+"""Entry point of the system"""
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from utils import find_item
+from .utils import find_item
 
 fastapi = FastAPI()
 
@@ -16,7 +16,6 @@ class Item(BaseModel):
 
     name: str
     quantity: int
-
 
 class ItemUpdate(BaseModel):
     """Pydantic model from updated item structure and validation"""
@@ -33,17 +32,17 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 @fastapi.get('/{username}')
 async def home(username: str):
-    '''Home route handler to welcome the user wih a greet message'''
+    """Home route handler to welcome the user wih a greet message"""
     return {'message': f'Hello {username}, Welcome !!!'}
 
 @fastapi.get('/items')
 async def get_items():
-    '''Route handler for get all items'''
+    """Route handler for get all items"""
     return {'items': inventory}
 
 @fastapi.get('/items/{item_id}')
 async def get_item(item_id: int):
-    '''Route handler for calling the searching functionality'''
+    """Route handler for calling the searching functionality"""
     if item_id <= 0:
         raise HTTPException(
             status_code=404,
@@ -54,7 +53,7 @@ async def get_item(item_id: int):
 
 @fastapi.delete('/items/{item_id}')
 async def delete_item(item_id: int):
-    '''Route handler for the delete functionality'''
+    """Route handler for the delete functionality"""
     item, idx = find_item(inventory, lambda x: x['id'] == item_id)
     if idx == -1:
         return HTTPException(404, 'item not found')
@@ -63,7 +62,7 @@ async def delete_item(item_id: int):
 
 @fastapi.post('/items')
 async def add_item(data: Item):
-    '''Route handler for add a new item in the database'''
+    """Route handler for add a new item in the database"""
     item = {
         'id': len(inventory) + 1,
         'name': data.name,
@@ -74,7 +73,7 @@ async def add_item(data: Item):
 
 @fastapi.patch('/items/{item_id}')
 async def update_item(item_id: int, item_update: ItemUpdate):
-    '''Router Handler for updating the already saved item'''
+    """Router Handler for updating the already saved item"""
     item, idx = find_item(inventory, lambda x: x['id'] == item_id)
     if idx == -1:
         raise HTTPException(status_code=404, detail='item not found')
